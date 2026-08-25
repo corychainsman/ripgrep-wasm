@@ -29,7 +29,7 @@
         </div>
         <form id="search-form">
           <label class="field-label" for="pattern">Pattern</label>
-          <div class="search-row"><input id="pattern" name="pattern" value="rust|wasm" autocomplete="off" spellcheck="false" aria-describedby="pattern-help" required /><button id="search-button" type="submit" disabled>Search <kbd>⌘↵</kbd></button></div>
+          <div class="search-row"><input id="pattern" name="pattern" autocomplete="off" spellcheck="false" aria-describedby="pattern-help" required /><button id="search-button" type="submit" disabled>Search <kbd>⌘↵</kbd></button></div>
           <p id="pattern-help" class="hint">Regular expressions are supported. Matching runs locally in ripgrep WebAssembly.</p>
           <fieldset class="options">
             <legend>Search options</legend>
@@ -38,10 +38,7 @@
           </fieldset>
           <div id="source-wrap">
             <label class="field-label" for="haystack">Text sample</label>
-            <textarea id="haystack" name="haystack" rows="9" spellcheck="false">ripgrep is a line-oriented search tool.
-It is written in Rust and built for speed.
-This browser lab runs the same idea through WebAssembly.
-Search locally: your text never leaves this tab.</textarea>
+            <textarea id="haystack" name="haystack" rows="9" spellcheck="false"></textarea>
           </div>
           <div id="file-wrap" class="file-input" hidden>
             <label class="field-label" for="files">Files</label>
@@ -51,11 +48,11 @@ Search locally: your text never leaves this tab.</textarea>
 target/
 *.min.js</textarea>
             <p id="file-help" class="hint">Choose a directory or files. Ripgrep filters their paths with these gitignore patterns, then searches included contents in memory.</p>
-            <p id="file-summary" class="file-summary" aria-live="polite">No files selected.</p>
+            <p id="file-summary" class="file-summary" aria-live="polite">Using 3 bundled sample files.</p>
           </div>
         </form>
         <div class="output-heading"><span>Matches</span><span id="elapsed"></span></div>
-        <pre id="output" class="output" tabindex="0">Enter a pattern and search to see results.</pre>
+        <pre id="output" class="output" tabindex="0" aria-live="polite">Loading a sample search…</pre>
         <p id="error" class="error" role="alert" hidden></p>
       </section>
 
