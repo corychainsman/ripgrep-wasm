@@ -1,4 +1,4 @@
-name: browser lab
+name: ripgrep WASM browser lab
 
 on:
   push:
