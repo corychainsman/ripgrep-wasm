@@ -14,6 +14,12 @@ other popular search tools like The Silver Searcher, ack and grep.
 
 Dual-licensed under MIT or the [UNLICENSE](https://unlicense.org).
 
+> **WebAssembly port:** This fork adds a browser-safe, in-memory ripgrep API
+> and web versions of the `simplegrep`, `ignore/walk`, and `search-stdin`
+> examples. Try the [browser lab](https://corychainsman.github.io/ripgrep-wasm/),
+> read the [web build guide](web/README.md), or see the exhaustive
+> [porting plan](WASM_PORT_PLAN.md). The native CLI remains unchanged.
+
 
 ### CHANGELOG
 
@@ -28,6 +34,7 @@ Please see the [CHANGELOG](CHANGELOG.md) for a release history.
 * [Configuration files](GUIDE.md#configuration-file)
 * [Shell completions](FAQ.md#complete)
 * [Building](#building)
+* [WebAssembly browser build](web/README.md)
 * [Translations](#translations)
 
 

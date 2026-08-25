@@ -1,0 +1,18 @@
+[package]
+name = "ripgrep-wasm"
+version = "0.1.0"
+description = "In-memory, browser-safe regular expression search for ripgrep"
+license = "Unlicense OR MIT"
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+crate-type = ["rlib", "cdylib"]
+
+[dependencies]
+globset = { version = "0.4.20", path = "../globset" }
+grep-matcher = { version = "0.1.8", path = "../matcher" }
+grep-regex = { version = "0.1.14", path = "../regex" }
+serde = { version = "1.0.77", features = ["derive"] }
+serde_json = "1.0.23"
+wasm-bindgen = "=0.2.127"

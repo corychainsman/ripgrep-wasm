@@ -21,5 +21,11 @@ ripgrep*_source.tar.bz2
 cargo-timing-*.html
 cargo-timing.html
 
+# Browser demo build artifacts
+/web/dist
+/web/wasm
+/web/node_modules
+/web/test-results
+
 # ripgrep index
 .ripgrep

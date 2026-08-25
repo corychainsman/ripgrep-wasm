@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Try ripgrep's search engine in your browser." />
+    <title>ripgrep / browser lab</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="masthead">
+        <p class="eyebrow">RIPGREP / BROWSER LAB</p>
+        <h1>Search stays local.</h1>
+        <p class="lede">Three small demonstrations of the ripgrep engine compiled to WebAssembly. Nothing is uploaded.</p>
+        <span id="runtime-status" class="status" role="status" aria-live="polite">Loading search engine…</span>
+      </header>
+
+      <nav class="modes" aria-label="Demo modes">
+        <button class="mode active" data-mode="grep" type="button" aria-current="page"><span>01</span><strong>Simple grep</strong><small>Search a text sample</small></button>
+        <button class="mode" data-mode="walk" type="button" aria-current="false"><span>02</span><strong>Walk files</strong><small>Search selected files</small></button>
+        <button class="mode" data-mode="stdin" type="button" aria-current="false"><span>03</span><strong>Search stdin</strong><small>Paste a stream</small></button>
+      </nav>
+
+      <section class="panel" aria-labelledby="demo-title">
+        <div class="panel-heading">
+          <div><p class="eyebrow" id="mode-kicker">SIMPLEGREP</p><h2 id="demo-title">Find a pattern in text</h2></div>
+          <span id="result-count" class="count">Ready</span>
+        </div>
+        <form id="search-form">
+          <label class="field-label" for="pattern">Pattern</label>
+          <div class="search-row"><input id="pattern" name="pattern" value="rust|wasm" autocomplete="off" spellcheck="false" aria-describedby="pattern-help" required /><button id="search-button" type="submit" disabled>Search <kbd>⌘↵</kbd></button></div>
+          <p id="pattern-help" class="hint">Regular expressions are supported. Matching runs locally in ripgrep WebAssembly.</p>
+          <fieldset class="options">
+            <legend>Search options</legend>
+            <label><input id="case-insensitive" type="checkbox" /> Ignore case</label>
+            <label><input id="multi-line" type="checkbox" /> Multiline anchors</label>
+          </fieldset>
+          <div id="source-wrap">
+            <label class="field-label" for="haystack">Text sample</label>
+            <textarea id="haystack" name="haystack" rows="9" spellcheck="false">ripgrep is a line-oriented search tool.
+It is written in Rust and built for speed.
+This browser lab runs the same idea through WebAssembly.
+Search locally: your text never leaves this tab.</textarea>
+          </div>
+          <div id="file-wrap" class="file-input" hidden>
+            <label class="field-label" for="files">Files</label>
+            <input id="files" name="files" type="file" webkitdirectory multiple accept="text/*,.md,.rs,.js,.ts,.json,.toml" aria-describedby="file-help" />
+            <label class="field-label" for="ignore-patterns">Ignore patterns</label>
+            <textarea id="ignore-patterns" rows="4" spellcheck="false">.git/
+target/
+*.min.js</textarea>
+            <p id="file-help" class="hint">Choose a directory or files. Ripgrep filters their paths with these gitignore patterns, then searches included contents in memory.</p>
+            <p id="file-summary" class="file-summary" aria-live="polite">No files selected.</p>
+          </div>
+        </form>
+        <div class="output-heading"><span>Matches</span><span id="elapsed"></span></div>
+        <pre id="output" class="output" tabindex="0">Enter a pattern and search to see results.</pre>
+        <p id="error" class="error" role="alert" hidden></p>
+      </section>
+
+      <footer><span>WASM-powered · local by default · based on <a href="https://github.com/BurntSushi/ripgrep">upstream ripgrep</a></span><a href="https://github.com/corychainsman/ripgrep-wasm">View this port on GitHub ↗</a></footer>
+    </main>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,89 @@
+name: browser lab
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "web/**"
+      - "crates/wasm/**"
+      - "crates/globset/**"
+      - "crates/matcher/**"
+      - "crates/regex/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/pages.yml"
+  pull_request:
+    paths:
+      - "web/**"
+      - "crates/wasm/**"
+      - "crates/globset/**"
+      - "crates/matcher/**"
+      - "crates/regex/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Install Rust and browser target
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: 1.96.0
+          targets: wasm32-unknown-unknown
+      - name: Build browser WASM package
+        run: |
+          cargo install wasm-bindgen-cli --version 0.2.127 --locked
+          cargo build --release --target wasm32-unknown-unknown -p ripgrep-wasm
+          wasm-bindgen \
+            target/wasm32-unknown-unknown/release/ripgrep_wasm.wasm \
+            --target web --out-dir web/wasm
+      - name: Check and build static site
+        run: |
+          npm --prefix web ci
+          npm --prefix web run lint
+          npm --prefix web run test:wasm
+          npm --prefix web run build
+      - name: Install Playwright browser
+        run: npx --prefix web playwright install --with-deps chromium
+      - name: Test browser demos
+        run: npm --prefix web run test:e2e
+      - name: Configure GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/configure-pages@v5
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: web/dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

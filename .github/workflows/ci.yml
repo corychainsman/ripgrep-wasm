@@ -216,7 +216,16 @@ jobs:
     - name: Add wasm32-wasip1 target
       run: rustup target add wasm32-wasip1
     - name: Basic build
-      run: cargo build --verbose
+      # Keep the target explicit: without this flag Cargo builds for the
+      # runner's native target and the wasm target added above is never
+      # compiled.
+      run: cargo build --verbose --target wasm32-wasip1
+    - name: Verify wasm artifact
+      # Assert that the target-specific build produced a WebAssembly binary;
+      # this catches accidental regressions to a host-only build command.
+      run: |
+        test -f target/wasm32-wasip1/debug/rg.wasm
+        file target/wasm32-wasip1/debug/rg.wasm | grep -q WebAssembly
 
   rustfmt:
     runs-on: ubuntu-latest

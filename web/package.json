@@ -1,0 +1,14 @@
+{
+  "name": "ripgrep-browser-demo",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "lint": "node --check app.js && node --check build.mjs && node --check test-wasm.mjs",
+    "test:wasm": "node test-wasm.mjs",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
+}
