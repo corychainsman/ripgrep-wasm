@@ -440,6 +440,37 @@ mod tests {
     }
 
     #[test]
+    fn empty_input_and_results_are_deterministic() {
+        let files = [
+            VirtualFile { path: "empty".into(), content: vec![] },
+            VirtualFile {
+                path: "text".into(),
+                content: "snowman ☃\n".as_bytes().to_vec(),
+            },
+        ];
+        let options = FileSearchOptions::default();
+        let first = search_files("snowman", &files, &options).unwrap();
+        let second = search_files("snowman", &files, &options).unwrap();
+        assert_eq!(
+            serde_json::to_string(&first).unwrap(),
+            serde_json::to_string(&second).unwrap()
+        );
+        assert_eq!(first.matches.len(), 1);
+        assert!(
+            first.matches[0]
+                .ranges
+                .iter()
+                .all(|range| range.start <= range.end
+                    && range.end <= files[1].content.len())
+        );
+        assert!(
+            search_bytes("anything", b"", SearchOptions::default())
+                .unwrap()
+                .is_empty()
+        );
+    }
+
+    #[test]
     fn filters_virtual_paths_with_gitignore_rules() {
         let got = filter_paths(
             r#"["src/lib.rs","target/debug/app","notes.log","keep.log"]"#,
